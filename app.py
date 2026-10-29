@@ -238,8 +238,7 @@ password = request.form.get("password", "")
         <h2>Create Account</h2>
         <p>{{ message }}</p>
         <form method="post">
-            <input name="email" type="email" placeholder="Email address" required>
-                   minlength="3" required>
+            <input name="email" type="email" placeholder="Email address" required>minlength="3" required>
             <input name="password" type="password"
                    placeholder="Password (6+ characters)"
                    minlength="6" required>
