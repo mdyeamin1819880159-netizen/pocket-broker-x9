@@ -154,14 +154,15 @@ def page(title, body):
             <div class="card">
                 <h1>Pocket Broker X9</h1>
                 <p>Virtual demo only — no real money.</p>
-                <a href="{{ url_for('home') }}">Home</a>
-                <a href="{{ url_for('history') }}">History</a>
-                {% if session.get('uid') %}
-                    <a href="{{ url_for('logout') }}">Logout</a>
-                {% else %}
-                    <a href="{{ url_for('login') }}">Login</a>
-                    <a href="{{ url_for('register') }}">Register</a>
-                {% endif %}
+             
+{% if session.get('uid') %}
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('history') }}">History</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+{% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+    <a href="{{ url_for('register') }}">Register</a>
+{% endif %}
             </div>
             {{ body|safe }}
         </div>
