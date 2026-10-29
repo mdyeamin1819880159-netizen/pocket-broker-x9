@@ -45,7 +45,7 @@ def init_db():
         c.executescript("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
             password_hash TEXT NOT NULL,
             balance REAL NOT NULL DEFAULT 1000,
             created_at TEXT NOT NULL
@@ -210,20 +210,20 @@ def register():
     message = ""
 
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password", "")
+        email = request.form.get("email", "").strip().lower()
+password = request.form.get("password", "")
 
-        if len(username) < 3 or len(password) < 6:
-            message = "Username needs 3 characters and password needs 6."
+        if "@" not in email or "." not in email or len(password) < 6:
+            message = "Enter a valid email and a password of at least 6 characters."
         else:
             try:
                 with db() as c:
                     c.execute(
                         """INSERT INTO users
-                        (username, password_hash, balance, created_at)
+                        (email, password_hash, balance, created_at)
                         VALUES (?, ?, ?, ?)""",
                         (
-                            username,
+                            email,
                             generate_password_hash(password),
                             1000,
                             datetime.now().isoformat(timespec="seconds")
@@ -238,7 +238,7 @@ def register():
         <h2>Create Account</h2>
         <p>{{ message }}</p>
         <form method="post">
-            <input name="username" placeholder="Username"
+            <input name="email" type="email" placeholder="Email address" required>
                    minlength="3" required>
             <input name="password" type="password"
                    placeholder="Password (6+ characters)"
@@ -257,13 +257,12 @@ def login():
     message = ""
 
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
+        email request.form.get("email","").strip().lower()
         password = request.form.get("password", "")
-
         with db() as c:
             user = c.execute(
-                "SELECT * FROM users WHERE username=?",
-                (username,)
+                "SELECT * FROM users WHERE email=?",
+                (email,)
             ).fetchone()
 
         if user and check_password_hash(
@@ -280,7 +279,7 @@ def login():
         <h2>Login</h2>
         <p>{{ message }}</p>
         <form method="post">
-            <input name="username" placeholder="Username" required>
+            <input name="email" type="email" placeholder="Email address" required>
             <input name="password" type="password"
                    placeholder="Password" required>
             <button type="submit">Login</button>
